@@ -1,0 +1,155 @@
+>>> from news.models import *
+>>> u1 = User.objects.create_user(username = 'Alex')
+>>> u2 = User.objects.create_user(username = 'Rey')
+>>> u1
+<User: Alex>
+>>> u2
+<User: Rey>
+>>> Author.objects.create(authorUser=u1)   
+<Author: Author object (1)>
+>>> Author.objects.create(authorUser=u2)
+<Author: Author object (2)>
+>>> Category.objects.create(name = 'City')
+<Category: Category object (1)>
+>>> Category.objects.create(name = 'Public')
+<Category: Category object (2)>
+>>> Category.objects.create(name = 'Events')
+<Category: Category object (3)>
+>>> Category.objects.create(name = 'Health')
+<Category: Category object (4)>
+>>> author = Author.objects.get(id=1)
+>>> author
+<Author: Author object (1)>
+>>> Post.objects.create(author=author,postChoice = 'AR', title = 'New in medicine', text = 'soon everyone will be cured')  
+<Post: Post object (1)>
+>>> Post.objects.get(id=1).title
+'New in medicine'
+>>> Post.objects.get(id=1).postCategory.add(Category.objects.get(id=4)) 
+>>> Post.objects.get(id=1).postCategory.add(Category.objects.get(id=2))  
+>>> Post.objects.create(author=author,postChoice = 'NW', title = 'Smog in the city today', text = 'The forest is burning, smog is everywhere. Beware!')
+<Post: Post object (2)>
+>>> Post.objects.get(id=1).title
+'New in medicine'
+>>> Post.objects.get(id=2).text
+'The forest is burning, smog is everywhere. Beware!'
+>>> Post.objects.get(id=2).postCategory.add(Category.objects.get(id=1))   
+>>> Post.objects.get(id=2).postCategory.add(Category.objects.get(id=2))  
+>>> author = Author.objects.get(id=2)  
+>>> author
+<Author: Author object (2)>
+>>> Post.objects.create(author=author,postChoice = 'AR', title = 'Holiday Day', text = 'This Saturday, a holiday day will be held on the main square of the city.')
+<Post: Post object (3)>
+>>> Post.objects.get(id=3).postCategory.add(Category.objects.get(id=1))    
+>>> Post.objects.get(id=3).postCategory.add(Category.objects.get(id=3))  
+>>> Comment.objects.create(commentPost=Post.objects.get(id=1), commentUser=Author.objects.get(id=1).authorUser, text = 'This is a hoax!')
+<Comment: Comment object (1)>
+>>> Comment.objects.create(commentPost=Post.objects.get(id=2), commentUser=Author.objects.get(id=1).authorUser, text = 'This is terrible! What to breathe?')
+<Comment: Comment object (2)>
+>>> Comment.objects.create(commentPost=Post.objects.get(id=2), commentUser=Author.objects.get(id=2).authorUser, text = 'We need to leave the city')          
+<Comment: Comment object (3)>
+>>> Comment.objects.create(commentPost=Post.objects.get(id=3), commentUser=Author.objects.get(id=2).authorUser, text = "Great! I'm coming!") 
+<Comment: Comment object (4)>
+>>> Comment.objects.get(id=1).like()
+>>> Comment.objects.get(id=1).like()
+>>> Comment.objects.get(id=1).like()
+>>> Comment.objects.get(id=1).like()
+>>> Comment.objects.get(id=1).dislike()
+>>> Comment.objects.get(id=1).rating
+3
+>>> Comment.objects.get(id=2).like()
+>>> Comment.objects.get(id=2).like()
+>>> Comment.objects.get(id=2).like()
+>>> Comment.objects.get(id=2).dislike() 
+>>> Comment.objects.get(id=2).dislike()
+>>> Comment.objects.get(id=2).dislike()
+>>> Comment.objects.get(id=2).like()    
+>>> Comment.objects.get(id=2).like()
+>>> Comment.objects.get(id=2).like()
+>>> Comment.objects.get(id=2).like()
+>>> Comment.objects.get(id=2).like()
+>>> Comment.objects.get(id=2).like()
+>>> Comment.objects.get(id=2).dislike() 
+>>> Comment.objects.get(id=1).dislike()  
+>>> Comment.objects.get(id=3).dislike()  
+>>> Comment.objects.get(id=3).dislike()
+>>> Comment.objects.get(id=1).like()
+>>> Comment.objects.get(id=3).like()  
+>>> Comment.objects.get(id=3).like()
+>>> Comment.objects.get(id=3).like()
+>>> Comment.objects.get(id=4).like()  
+>>> Comment.objects.get(id=4).like()
+>>> Comment.objects.get(id=4).dislike()
+>>> Comment.objects.get(id=4).dislike()
+>>> Post.objects.get(id=1).like()
+>>> Post.objects.get(id=1).like()
+>>> Post.objects.get(id=1).like()
+>>> Post.objects.get(id=1).dislike()
+>>> Post.objects.get(id=2).dislike() 
+>>> Post.objects.get(id=2).dislike()
+>>> Post.objects.get(id=2).like()    
+>>> Post.objects.get(id=2).like()
+>>> Post.objects.get(id=2).like()
+>>> Post.objects.get(id=3).like()  
+>>> Post.objects.get(id=3).dislike()
+>>> Post.objects.get(id=3).like()
+>>> Post.objects.get(id=3).like() 
+>>> Post.objects.get(id=3).like()
+>>> Post.objects.get(id=3).like() 
+>>> Post.objects.get(id=3).like() 
+>>> Post.objects.get(id=3).like() 
+>>> Post.objects.get(id=3).like() 
+>>> Post.objects.get(id=3).like() 
+>>> Post.objects.get(id=3).like() 
+>>> Post.objects.get(id=3).like()   
+>>> author = Author.objects.get(id=1)
+>>> author
+<Author: Author object (1)>
+>>> a = Author.objects.get(id=1) 
+>>> a.update_rating()
+>>> a.ratingAuthor
+16
+>>> b = Author.objects.get(id=2)
+>>> b.update_rating()
+>>> b.ratingAuthor
+31
+>>> Author.objects.order_by('-ratingAuthor')[:1]
+<QuerySet [<Author: Author object (2)>]>
+>>> a = Author.objects.order_by('-ratingAuthor')[:1]
+>>> a
+<QuerySet [<Author: Author object (2)>]>
+>>> for i in a:   
+...     i.ratingAuthor
+...     i.authorUser.username
+31
+'Rey'
+>>> Post.objects.get(id=1).rating
+2
+>>> Post.objects.get(id=2).rating 
+1
+>>> Post.objects.get(id=3).rating 
+10
+>>> a = Post.objects.order_by('-rating')[:1]
+>>> a
+<QuerySet [<Post: Post object (3)>]>
+>>> for i in a:
+...     i.dataCreation
+...     i.title
+...     i.author             
+...     i.rating
+...     i.preview()
+datetime.datetime(2024, 3, 14, 15, 17, 49, 110484, tzinfo=datetime.timezone.utc)
+'Holiday Day'
+<Author: Author object (2)>
+10
+'This Saturday, a holiday day will be held on the main square of the city....'
+>>> Comment.objects.get(id=1).values()
+(datetime.datetime(2024, 3, 14, 15, 18, 44, 339795, tzinfo=datetime.timezone.utc), <User: Alex>, 4, 'This is a hoax!')
+>>> Comment.objects.get(id=2).values() 
+(datetime.datetime(2024, 3, 14, 15, 18, 56, 972369, tzinfo=datetime.timezone.utc), <User: Alex>, 2, 'This is terrible! What to breathe?')
+>>> Comment.objects.get(id=3).values() 
+(datetime.datetime(2024, 3, 14, 15, 19, 48, 261496, tzinfo=datetime.timezone.utc), <User: Rey>, 1, 'We need to leave the city')
+>>> Comment.objects.get(id=4).values() 
+(datetime.datetime(2024, 3, 14, 15, 20, 8, 403816, tzinfo=datetime.timezone.utc), <User: Rey>, 0, "Great! I'm coming!")
+>>>
+
+
